@@ -1,0 +1,23 @@
+{
+  "name": "check-your-stox",
+  "version": "1.0.0",
+  "description": "Web App for users to purchase and sell stocks of their choice",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RawKitMan/Check-Your-Stox.git"
+  },
+  "author": "CJ Vaughn",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RawKitMan/Check-Your-Stox/issues"
+  },
+  "homepage": "https://github.com/RawKitMan/Check-Your-Stox#readme"
+}
