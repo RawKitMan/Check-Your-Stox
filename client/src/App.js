@@ -1,9 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Login from './pages/Login';
-import Login from './pages/SignUp';
-import Login from './pages/Portfolio';
-import Login from './pages/StockList';
+import SignUp from './pages/SignUp';
+import Portfolio from './pages/Portfolio';
+import StockList from './pages/StockList';
+import NotMatch from './pages/NotMatch';
 import './App.css';
 
 function App() {
