@@ -4,6 +4,8 @@ import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import API from "../../utils/api";
+
 
 class StockList extends Component {
 
@@ -12,7 +14,6 @@ class StockList extends Component {
         stockInfo: [],
         isLoaded: false,
         numStock: '',
-        totalWorth: 0,
         modalShow: false,
         purchaseName: '',
         purchasePrice: ''
@@ -55,7 +56,7 @@ class StockList extends Component {
         })
     }
 
-    handlePurchase = (event, stock) =>{
+    handlePurchase = (event, stock) => {
 
         this.setState({
             purchaseName: stock.name,
@@ -63,10 +64,22 @@ class StockList extends Component {
         });
     }
 
-    saveStocks = () => {
+    saveStocks = (purchaseName, numStock) => {
 
-        let totalWorth = parseInt(this.state.numStock) * parseFloat(this.state.purchasePrice).toFixed(2);
-       
+        let totalWorth = parseInt(numStock) * parseFloat(this.state.purchasePrice).toFixed(2);
+
+        API.saveStocks(purchaseName, totalWorth, numStock)
+            .then(res => {
+                this.setState({
+                    purchaseName: '',
+                    purchasePrice: '',
+                    numStock: '',
+                    totalWorth: 0
+                })
+                
+            })
+            .catch(err => console.log(err));
+
     }
 
     handleChange = (event) => {
@@ -115,7 +128,7 @@ class StockList extends Component {
                                     <tr key={stock.name}>
                                         <td>{stock.name}</td>
                                         <td>{stock.price}</td>
-                                        <td><Button as="input" id={stock.name} type="button" defaultValue="Buy" onClick={(e) => {this.handleOpen(); this.handlePurchase(e, stock);}} /></td>
+                                        <td><Button as="input" id={stock.name} type="button" defaultValue="Buy" onClick={(e) => { this.handleOpen(); this.handlePurchase(e, stock); }} /></td>
                                     </tr>
                                 ))}
 
@@ -133,7 +146,7 @@ class StockList extends Component {
                             </form>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="primary" onClick={() => {this.handleClose(); this.saveStocks()}}>Purchase</Button>
+                            <Button variant="primary" onClick={() => { this.handleClose(); this.saveStocks(this.state.purchaseName, this.state.numStock) }}>Purchase</Button>
                             <Button variant="danger" onClick={this.handleClose}>Cancel</Button>
                         </Modal.Footer>
                     </Modal>

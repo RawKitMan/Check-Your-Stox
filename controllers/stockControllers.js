@@ -6,7 +6,7 @@ module.exports = {
     saveStock: (req, res) => {
         db.Stock.create({
             name: req.body.name,
-            numStocks: req.body.numStocks,
+            numStocks: req.body.numStock,
             totalWorth: req.body.totalWorth
         })
             .then(dbStock => res.json(dbStock))

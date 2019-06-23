@@ -12,20 +12,12 @@ const stockSchema = new Schema({
         type: Number
     },
     totalWorth: {
-        type: Number,
-        get: getPrice,
-        set: setPrice
+        type: Number
     }
 
 })
 
-function getPrice(num){
-    return (num/100).toFixed(2);
-}
 
-function setPrice(num){
-    return num*100;
-}
 
 const Stock = mongoose.model('StockItem', stockSchema);
 
