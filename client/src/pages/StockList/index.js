@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import StockRow from '../../components/StockRow';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
+import Table from 'react-bootstrap/Table';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
@@ -11,9 +11,11 @@ class StockList extends Component {
         error: null,
         stockInfo: [],
         isLoaded: false,
-        numStock: 0,
+        numStock: '',
         totalWorth: 0,
-        modalShow: false
+        modalShow: false,
+        purchaseName: '',
+        purchasePrice: ''
     }
 
     //This method explains what the page will do when the Stock List page loads
@@ -53,6 +55,28 @@ class StockList extends Component {
         })
     }
 
+    handlePurchase = (event, stock) =>{
+
+        this.setState({
+            purchaseName: stock.name,
+            purchasePrice: stock.price
+        });
+    }
+
+    saveStocks = () => {
+
+        let totalWorth = parseInt(this.state.numStock) * parseFloat(this.state.purchasePrice).toFixed(2);
+       
+    }
+
+    handleChange = (event) => {
+        this.setState({
+            numStock: event.target.value
+
+        })
+    }
+
+
     /*This page will render one of three displays: 
         1) The error message if the API sends an error
         2) A loading message while the app grabs all of the API data
@@ -74,40 +98,42 @@ class StockList extends Component {
         } else {
             return (
                 <Container>
-                    <Row className = "mt-5 mb-5"/>
-                    <Row className = "mt-5 mb-5"/>
+                    <Row className="mt-5 mb-5" />
+                    <Row className="mt-5 mb-5" />
                     <Row>
-                        <table className="table table-striped border border-rounded border-primary">
+                        <Table striped bordered hover>
                             <thead>
                                 <tr>
                                     <th scope="col">Name</th>
-                                    <th scope="col">Price</th>
-                                    <th scope="col">Purchase</th>
+                                    <th scope="col">Price (USD)</th>
                                 </tr>
                             </thead>
                             <tbody>
 
                                 {stockInfo.map(stock => (
 
-                                    <StockRow
-                                        name={stock.name}
-                                        price={stock.price}
-                                        handleOpen={this.handleOpen}
-                                    />
-
+                                    <tr key={stock.name}>
+                                        <td>{stock.name}</td>
+                                        <td>{stock.price}</td>
+                                        <td><Button as="input" id={stock.name} type="button" defaultValue="Buy" onClick={(e) => {this.handleOpen(); this.handlePurchase(e, stock);}} /></td>
+                                    </tr>
                                 ))}
 
                             </tbody>
-                        </table>
+                        </Table>
                     </Row>
 
                     <Modal show={this.state.modalShow} onHide={this.handleClose}>
                         <Modal.Header closeButton>
-                            <Modal.Title>Modal heading</Modal.Title>
+                            <Modal.Title>How many would you like to purchase?</Modal.Title>
                         </Modal.Header>
-                        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+                        <Modal.Body>
+                            <form>
+                                <textarea value={this.state.numStock} onChange={this.handleChange} />
+                            </form>
+                        </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="primary" onClick={this.handleClose}>Purchase</Button>
+                            <Button variant="primary" onClick={() => {this.handleClose(); this.saveStocks()}}>Purchase</Button>
                             <Button variant="danger" onClick={this.handleClose}>Cancel</Button>
                         </Modal.Footer>
                     </Modal>
