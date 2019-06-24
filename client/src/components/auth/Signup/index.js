@@ -1,8 +1,8 @@
 import React, { Component } from "react";
+import { registerUser } from '../../../actions/authActions';
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { registerUser } from "../../../actions/authActions";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -144,12 +144,12 @@ Signup.propTypes = {
     registerUser: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired
-  };
-  const mapStateToProps = state => ({
+};
+const mapStateToProps = state => ({
     auth: state.auth,
     errors: state.errors
-  });
-  export default connect(
+});
+export default connect(
     mapStateToProps,
     { registerUser }
-  )(withRouter(Signup));
+)(withRouter(Signup));
