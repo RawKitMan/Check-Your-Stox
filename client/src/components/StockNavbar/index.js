@@ -10,7 +10,7 @@ class StockNavbar extends Component {
         return (
 
             <Navbar bg="dark" variant="dark">
-                <Navbar.Brand href="#home">Navbar</Navbar.Brand>
+                <Navbar.Brand>Welcome!</Navbar.Brand>
                 <Nav className="mr-auto">
                     <Nav.Link href="/portfolio">Portfolio</Nav.Link>
                     <Nav.Link href="/stocklist">Stock List</Nav.Link>

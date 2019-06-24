@@ -1,10 +1,14 @@
 //Get all the imports we need for the controller and router
 const express = require("express"),
     router = express.Router(),
-    { stockControllers } = require('../controllers');
+    { userController, stockControllers } = require('../controllers');
 
+//Set up routes to the User controller methods
 
-//Set up the routes to the controller
+router.post("/users/login", userController.login);
+router.route("/users/signup").post(userController.register);
+
+//Set up the routes to the Stocks controller methods
 router.route("/stocks").post(stockControllers.saveStock);
 router.route("/stocks").get(stockControllers.getPurchases);
 router.route("/stocks/:id").delete(stockControllers.sellStock);

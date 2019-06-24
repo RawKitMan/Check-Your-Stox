@@ -4,16 +4,18 @@ const express = require('express'),
   mongoose = require('mongoose'),
   PORT = process.env.PORT || 3001,
   app = express();
-//const passport = require('passport');
+
+const passport = require('passport');
 
 // Define middleware:
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Passport middleware
-//app.use(passport.initialize());
-// Passport config
-//require('./config/passport')(passport);
+app.use(passport.initialize());
+
+// Passport configuration
+require('./config/passport')(passport);
 
 // Serve up static assets:
 if (process.env.NODE_ENV === 'production') {
