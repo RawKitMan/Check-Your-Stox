@@ -57,6 +57,7 @@ class StockList extends Component {
     }
 
     handlePurchase = (event, stock) => {
+        console.log(stock);
 
         this.setState({
             purchaseName: stock.name,
@@ -68,7 +69,7 @@ class StockList extends Component {
 
         let totalWorth = parseInt(numStock) * parseFloat(this.state.purchasePrice).toFixed(2);
 
-        API.saveStocks(purchaseName, totalWorth, numStock)
+        API.saveStocks(purchaseName, this.state.purchasePrice, totalWorth, numStock)
             .then(res => {
                 this.setState({
                     purchaseName: '',
@@ -114,11 +115,12 @@ class StockList extends Component {
                     <Row className="mt-5 mb-5" />
                     <Row className="mt-5 mb-5" />
                     <Row>
-                        <Table striped bordered hover>
+                        <Table striped bordered hover responsive className= "text-center">
                             <thead>
                                 <tr>
                                     <th scope="col">Name</th>
-                                    <th scope="col">Price (USD)</th>
+                                    <th scope="col">Price per stock (USD)</th>
+                                    <th scope="col">Purchase</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -127,7 +129,7 @@ class StockList extends Component {
 
                                     <tr key={stock.name}>
                                         <td>{stock.name}</td>
-                                        <td>{stock.price}</td>
+                                        <td>${stock.price}</td>
                                         <td><Button as="input" id={stock.name} type="button" defaultValue="Buy" onClick={(e) => { this.handleOpen(); this.handlePurchase(e, stock); }} /></td>
                                     </tr>
                                 ))}

@@ -11,13 +11,14 @@ const stockSchema = new Schema({
     numStocks: {
         type: Number
     },
+    purchasePrice:{
+        type: String
+    },
     totalWorth: {
         type: Number
     }
 
-})
-
-
+});
 
 const Stock = mongoose.model('StockItem', stockSchema);
 

@@ -7,37 +7,24 @@ module.exports = {
         db.Stock.create({
             name: req.body.name,
             numStocks: req.body.numStock,
+            purchasePrice: req.body.purchasePrice,
             totalWorth: req.body.totalWorth
         })
             .then(dbStock => res.json(dbStock))
             .catch(err => res.status(422).json(err))
     },
 
-    getStocks: (req, res) => {
+    getPurchases: (req, res) => {
         db.Stock.find({})
             .then(dbStock => res.json(dbStock))
             .catch(err => res.status(422).json(err))
     },
 
     updateStock: (req, res) => {
-        db.Stock.findByIdAndUpdate(
-            { _id: req.params.id },
-            { numStocks: req.body.numStocks },
-            { totalWorth: req.body.totalWorth },
-            { new: true }
-        )
-            .then(dbStock => res.json(dbStock))
-            .catch(err => res.status(422).json(err))
+
     },
 
-    deleteQuest: (req, res) => {
+    deleteStock: (req, res) => {
 
-        db.Quest.findByIdAndDelete(
-          {
-            _id: req.params.id
-          }
-        )
-        .then(dbQuest => res.json(dbQuest))
-        .catch(err => res.status(422).json(err))
-      }
+    }
 };
