@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
+import StockNavBar from '../../components/StockNavbar';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import API from "../../utils/api";
-
-
 
 class Portfolio extends Component {
 
@@ -15,11 +14,19 @@ class Portfolio extends Component {
         isLoaded: false,
         stockInfo: [],
         purchaseList: [],
-        showModal: false
+        showSellModal: false,
+        sellStockId: '',
+        buyStockId: '',
+        showBuyModal: false,
+        numStockPurchase: '',
+        buyPrice: '',
     }
 
     componentDidMount() {
 
+        this.interval = setInterval(() => {
+            window.location.reload()
+        }, 600000)
 
         fetch('https://api.worldtradingdata.com/api/v1/stock_search?stock_exchange=NASDAQ&api_token=AbfOZS7KraxAILz0rqzgIfOJHbTIxxEX8upEqHnj1CeCphNBXrm60jcDug8W')
             .then(res => res.json())
@@ -47,6 +54,73 @@ class Portfolio extends Component {
                     });
                 }
             );
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
+
+    handleSellOpen = () => {
+        this.setState({
+            showSellModal: true
+        })
+    }
+
+    handleSellClose = () => {
+        this.setState({
+            showSellModal: false
+        })
+    }
+
+    handleBuyOpen = () => {
+        this.setState({
+            showBuyModal: true
+        })
+    }
+
+    handleBuyClose = () => {
+        this.setState({
+            showBuyModal: false
+        })
+    }
+
+    handleSale = (event, sellId) => {
+        this.setState({
+            sellStockId: sellId
+        });
+    }
+
+    handleBuy = (event, buyId, purchasePrice) => {
+
+        this.setState({
+            buyStockId: buyId,
+            buyPrice: purchasePrice
+        })
+    }
+
+    handleChange = (event) => {
+        this.setState({
+            numStockPurchase: event.target.value
+        })
+    }
+
+    sellStock = (stockId) => {
+
+        API.sellStock(stockId)
+            .then(window.location.reload())
+            .catch(err => console.log(err))
+
+    }
+
+    buyMoreShares = (stockId, numStockPurchase) => {
+
+        let purchaseObject = this.state.purchaseList[this.state.purchaseList.map(element => { return element._id }).indexOf(stockId)];
+
+        let totalShares = purchaseObject.numShares + parseInt(numStockPurchase);
+
+        API.buyMoreShares(stockId, totalShares)
+            .then(window.location.reload())
+            .catch(err => console.log(err))
 
 
     }
@@ -59,7 +133,9 @@ class Portfolio extends Component {
             return <div>Loading...</div>;
         } else {
             return (
+
                 <Container>
+                    <StockNavBar />
                     <Row className="mt-5 mb-5" />
                     <Row className="mt-5 mb-5" />
                     <Row>
@@ -67,10 +143,12 @@ class Portfolio extends Component {
                             <thead>
                                 <tr>
                                     <th scope="col">Name</th>
+                                    <th scope="col"># of Shares</th>
                                     <th scope="col">Price Per Share at Purchase (USD)</th>
                                     <th scope="col">Current Price Per Share (USD)</th>
                                     <th scope="col">Price Difference (USD)</th>
                                     <th scope="col">Sell?</th>
+                                    <th scope="col">Buy More?</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -79,16 +157,45 @@ class Portfolio extends Component {
 
                                     <tr key={stock._id}>
                                         <td>{stock.name}</td>
+                                        <td>{stock.numShares}</td>
                                         <td>${stock.purchasePrice}</td>
-                                        <td>${stockInfo[stockInfo.map(element => {return element.name}).indexOf(stock.name)].price}</td>
-                                        <td>${(parseFloat(stockInfo[stockInfo.map(element => {return element.name}).indexOf(stock.name)].price) - parseFloat(stock.purchasePrice).toFixed(2)).toFixed(2)}</td>
-                                        <td><Button as="input" id={stock.name} type="button" defaultValue="Sell" onClick={(e) => { this.handleOpen(); this.handleSale(e, stock); }} /></td>
+                                        <td>${stockInfo[stockInfo.map(element => { return element.name }).indexOf(stock.name)].price}</td>
+                                        <td>${(parseFloat(stockInfo[stockInfo.map(element => { return element.name }).indexOf(stock.name)].price) - parseFloat(stock.purchasePrice).toFixed(2)).toFixed(2)}</td>
+
+                                        <td><Button as="input" id={stock.name} type="button" defaultValue="Sell" onClick={(e) => { this.handleSellOpen(); this.handleSale(e, stock._id, stockInfo[stockInfo.map(element => { return element.name }).indexOf(stock.name)].price); }} /></td>
+
+                                        <td><Button as="input" id={stock.name} type="button" defaultValue="Buy" onClick={(e) => { this.handleBuyOpen(); this.handleBuy(e, stock._id, stockInfo[stockInfo.map(element => { return element.name }).indexOf(stock.name)].price); }}></Button></td>
                                     </tr>
                                 ))}
 
                             </tbody>
                         </Table>
                     </Row>
+
+                    <Modal show={this.state.showSellModal} onHide={this.handleSellClose}>
+                        <Modal.Body>
+                            <p>Are you sure you want to sell these shares??</p>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="primary" onClick={() => { this.handleSellClose(); this.sellStock(this.state.sellStockId) }}>Sell</Button>
+                            <Button variant="danger" onClick={this.handleSellClose}>Cancel</Button>
+                        </Modal.Footer>
+                    </Modal>
+
+                    <Modal show={this.state.showBuyModal} onHide={this.handleBuyClose}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>How many would you like to purchase?</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <form>
+                                <textarea value={this.state.numStockPurchase} onChange={this.handleChange} />
+                            </form>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="primary" onClick={() => { this.handleBuyClose(); this.buyMoreShares(this.state.buyStockId, this.state.numStockPurchase) }}>Purchase</Button>
+                            <Button variant="danger" onClick={this.handleBuyClose}>Cancel</Button>
+                        </Modal.Footer>
+                    </Modal>
                 </Container>
             )
         }

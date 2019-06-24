@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import StockNavbar from '../../components/StockNavbar';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
@@ -67,7 +68,7 @@ class StockList extends Component {
 
     saveStocks = (purchaseName, numStock) => {
 
-        let totalWorth = parseInt(numStock) * parseFloat(this.state.purchasePrice).toFixed(2);
+        let totalWorth = (parseInt(numStock) * parseFloat(this.state.purchasePrice)).toFixed(2);
 
         API.saveStocks(purchaseName, this.state.purchasePrice, totalWorth, numStock)
             .then(res => {
@@ -86,7 +87,6 @@ class StockList extends Component {
     handleChange = (event) => {
         this.setState({
             numStock: event.target.value
-
         })
     }
 
@@ -112,6 +112,7 @@ class StockList extends Component {
         } else {
             return (
                 <Container>
+                    <StockNavbar />
                     <Row className="mt-5 mb-5" />
                     <Row className="mt-5 mb-5" />
                     <Row>
