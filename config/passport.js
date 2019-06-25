@@ -10,7 +10,7 @@ const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 
 //This is a key that is used to verify the token's signature. 
-opts.secretOrKey = 'herpy derp';
+opts.secretOrKey = 'cats got your tongue';
 
 module.exports = passport => {
   passport.use(

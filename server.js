@@ -13,7 +13,6 @@ app.use(express.json());
 
 // Passport middleware
 app.use(passport.initialize());
-
 // Passport configuration
 require('./config/passport')(passport);
 

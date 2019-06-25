@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { logoutUser } from "../../actions/authActions";
 import StockNavbar from '../../components/StockNavbar';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
@@ -78,7 +81,7 @@ class StockList extends Component {
                     numStock: '',
                     totalWorth: 0
                 })
-                
+
             })
             .catch(err => console.log(err));
 
@@ -105,6 +108,9 @@ class StockList extends Component {
     render() {
 
         const { error, isLoaded, stockInfo } = this.state;
+        const { user } = this.props.auth;
+
+        console.log(this.props.auth);
         if (error) {
             return <div>Error: {error.message}</div>;
         } else if (!isLoaded) {
@@ -112,11 +118,14 @@ class StockList extends Component {
         } else {
             return (
                 <Container>
-                    <StockNavbar />
+                    <StockNavbar
+                        username={user.name}
+                        signout={this.onSignoutClick}
+                    />
                     <Row className="mt-5 mb-5" />
                     <Row className="mt-5 mb-5" />
                     <Row>
-                        <Table striped bordered hover responsive className= "text-center">
+                        <Table striped bordered hover responsive className="text-center">
                             <thead>
                                 <tr>
                                     <th scope="col">Name</th>
@@ -161,4 +170,15 @@ class StockList extends Component {
 
 }
 
-export default StockList;
+StockList.propTypes = {
+    logoutUser: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired,
+};
+const mapStateToProps = state => ({
+    auth: state.auth
+});
+
+export default connect(
+    mapStateToProps,
+    { logoutUser }
+)(StockList);

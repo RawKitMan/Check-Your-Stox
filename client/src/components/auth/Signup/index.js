@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { registerUser } from '../../../actions/authActions';
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { registerUser } from '../../../actions/authActions';
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -23,11 +23,11 @@ class Signup extends Component {
     componentDidMount() {
         // If logged in and user navigates to Register page, should redirect them to dashboard
         if (this.props.auth.isAuthenticated) {
-            this.props.history.push("/myquest");
+            this.props.history.push("/portfolio");
         }
     }
-
     componentWillReceiveProps(nextProps) {
+
         if (nextProps.errors) {
             this.setState({
                 errors: nextProps.errors
@@ -36,6 +36,7 @@ class Signup extends Component {
     }
 
     onChange = (event) => {
+        console.log(event.target.value);
         this.setState(
             {
                 [event.target.id]: event.target.value
@@ -48,11 +49,12 @@ class Signup extends Component {
 
         let newUser = {
             name: this.state.name,
-            class: this.state.class,
             email: this.state.email,
             password: this.state.password,
             password2: this.state.password2
         }
+
+        console.log(newUser);
 
         this.props.registerUser(newUser, this.props.history);
     }
@@ -129,7 +131,7 @@ class Signup extends Component {
                                         ""
                                     )}
                             </Form.Group>
-                            <Button type='submit' className='float-left'>Your Quest Awaits...</Button>
+                            <Button type='submit' className='float-left'>Create Account</Button>
 
                         </Form>
                     </Col>

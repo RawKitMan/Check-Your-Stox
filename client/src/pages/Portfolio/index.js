@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { logoutUser } from "../../actions/authActions";
 import StockNavBar from '../../components/StockNavbar';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
@@ -8,6 +11,11 @@ import Button from 'react-bootstrap/Button';
 import API from "../../utils/api";
 
 class Portfolio extends Component {
+
+    onSignoutClick = (event) => {
+        event.preventDefault();
+        this.props.logoutUser();
+    }
 
     state = {
         error: null,
@@ -127,6 +135,10 @@ class Portfolio extends Component {
 
     render() {
         const { error, isLoaded, stockInfo, purchaseList } = this.state;
+        const { user } = this.props.auth
+
+        console.log(user);
+
         if (error) {
             return <div>Error: {error.message}</div>;
         } else if (!isLoaded) {
@@ -135,7 +147,10 @@ class Portfolio extends Component {
             return (
 
                 <Container>
-                    <StockNavBar />
+                    <StockNavBar
+                        username={user.name}
+                        signout={this.onSignoutClick}
+                    />
                     <Row className="mt-5 mb-5" />
                     <Row className="mt-5 mb-5" />
                     <Row>
@@ -202,4 +217,15 @@ class Portfolio extends Component {
     }
 }
 
-export default Portfolio;
+Portfolio.propTypes = {
+    logoutUser: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired,
+};
+const mapStateToProps = state => ({
+    auth: state.auth
+});
+
+export default connect(
+    mapStateToProps,
+    { logoutUser }
+)(Portfolio);

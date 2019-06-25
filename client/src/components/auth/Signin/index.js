@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { loginUser } from "../../../../actions/authActions";
+import { loginUser } from "../../../actions/authActions";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -12,25 +12,28 @@ import Alert from "react-bootstrap/Alert";
 
 class Signin extends Component {
 
-    state = {
-        email: '',
-        password: '',
-        errors: {}
+    constructor() {
+        super();
+        this.state = {
+            email: '',
+            password: '',
+            errors: {}
+        };
     }
 
     componentDidMount() {
         if (this.props.auth.isAuthenticated) {
-            this.props.history.push("/")
+            this.props.history.push("/portfolio")
         }
     }
 
-    componentWillReceiveProps(props) {
-        if (props.auth.isAuthenticated) {
-            this.props.history.push("/")
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.auth.isAuthenticated) {
+            this.props.history.push("/portfolio")
         }
-        if (props.errors) {
+        if (nextProps.errors) {
             this.setState({
-                errors: props.errors
+                errors: nextProps.errors
             })
         }
     }
@@ -70,7 +73,7 @@ class Signin extends Component {
                                         error={errors.email}
                                         id='email'
                                         type='email'
-                                        
+
                                     />
                                     {errors.email || errors.emailnotfound ?
                                         <Alert variant='danger'>
