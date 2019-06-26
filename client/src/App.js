@@ -28,7 +28,7 @@ if (localStorage.jwtToken) {
     // Logout user
     store.dispatch(logoutUser());
     // Redirect to login
-    window.location.href = "./signup";
+    window.location.href = "./";
   }
 }
 
@@ -38,10 +38,10 @@ class App extends Component {
       <Provider store={store}>
         <Router>
           <Switch>
-            <Route exact path="/" render={() => <Login />} />
+            <Route exact path='/' render={() => <Login />} />
             <Route exact path="/signup" render={() => <SignUp />} />
-            <Route exact path="/portfolio" render={() => <Portfolio />} />
-            <Route exact path="/stocklist" render={() => <StockList />} />
+            <PrivateRoute exact path="/portfolio" component={Portfolio} />
+            <PrivateRoute exact path="/stocklist" component={StockList} />
             <Route component={NotMatch} />
           </Switch>
         </Router>

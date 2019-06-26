@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -162,12 +163,10 @@ class StockList extends Component {
                             <Button variant="danger" onClick={this.handleClose}>Cancel</Button>
                         </Modal.Footer>
                     </Modal>
-
-                </Container >
-            );
+                </Container>
+            )
         }
     }
-
 }
 
 StockList.propTypes = {
