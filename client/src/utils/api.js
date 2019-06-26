@@ -6,5 +6,5 @@ export default {
   saveStocks: (name, purchasePrice, totalWorth, numStock, userId) => axios.post('api/stocks', { name, purchasePrice, totalWorth, numStock, userId }),
   sellStock: id => axios.delete(`api/stocks/${id}`),
   buyMoreShares: (id, totalShares, userId) => axios.put(`api/stocks/${id}/${userId}`, { totalShares }),
-  getPurchases: (id) => axios.get(`api/stocks/${id}`)
+  getPurchases: (user) => axios.get(`api/stocks/${user}`)
 };
