@@ -70,11 +70,11 @@ class StockList extends Component {
         });
     }
 
-    saveStocks = (purchaseName, numStock) => {
+    saveStocks = (purchaseName, numStock, userId) => {
 
         let totalWorth = (parseInt(numStock) * parseFloat(this.state.purchasePrice)).toFixed(2);
 
-        API.saveStocks(purchaseName, this.state.purchasePrice, totalWorth, numStock)
+        API.saveStocks(purchaseName, this.state.purchasePrice, totalWorth, numStock, userId)
             .then(res => {
                 this.setState({
                     purchaseName: '',
@@ -111,7 +111,7 @@ class StockList extends Component {
         const { error, isLoaded, stockInfo } = this.state;
         const { user } = this.props.auth;
 
-        console.log(this.props.auth);
+        console.log(this.props);
         if (error) {
             return <div>Error: {error.message}</div>;
         } else if (!isLoaded) {
@@ -159,7 +159,7 @@ class StockList extends Component {
                             </form>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="primary" onClick={() => { this.handleClose(); this.saveStocks(this.state.purchaseName, this.state.numStock) }}>Purchase</Button>
+                            <Button variant="primary" onClick={() => { this.handleClose(); this.saveStocks(this.state.purchaseName, this.state.numStock, user.name) }}>Purchase</Button>
                             <Button variant="danger" onClick={this.handleClose}>Cancel</Button>
                         </Modal.Footer>
                     </Modal>

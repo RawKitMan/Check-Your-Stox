@@ -10,9 +10,9 @@ router.route("/users/signup").post(userControllers.register);
 
 //Set up the routes to the Stocks controller methods
 router.route("/stocks").post(stockControllers.saveStock);
-router.route("/stocks").get(stockControllers.getPurchases);
+router.route("/stocks/:user").get(stockControllers.getPurchases);
 router.route("/stocks/:id").delete(stockControllers.sellStock);
-router.route("/stocks/:id").put(stockControllers.buyMoreShares);
+router.route("/stocks/:id/:user").put(stockControllers.buyMoreShares);
 
 // Exports:
 module.exports = router;

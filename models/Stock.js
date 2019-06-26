@@ -8,6 +8,9 @@ const stockSchema = new Schema({
     name: {
         type: String
     },
+    user:{
+        type: String
+    },
     numShares: {
         type: Number
     },

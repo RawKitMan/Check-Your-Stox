@@ -42,7 +42,7 @@ class Portfolio extends Component {
                 //Get the data from the API and store it in the state
                 (result) => {
                     let stockData = result.data;
-                    API.getPurchases(function (err, docs) { })
+                    API.getPurchases(this.props.auth.user.name)
                         .then(res => {
                             console.log(res)
 
@@ -112,21 +112,21 @@ class Portfolio extends Component {
         })
     }
 
-    sellStock = (stockId) => {
+    sellStock = (id) => {
 
-        API.sellStock(stockId)
+        API.sellStock(id)
             .then(window.location.reload())
             .catch(err => console.log(err))
 
     }
 
-    buyMoreShares = (stockId, numStockPurchase) => {
+    buyMoreShares = (stockId, numStockPurchase, user) => {
 
         let purchaseObject = this.state.purchaseList[this.state.purchaseList.map(element => { return element._id }).indexOf(stockId)];
 
         let totalShares = purchaseObject.numShares + parseInt(numStockPurchase);
 
-        API.buyMoreShares(stockId, totalShares)
+        API.buyMoreShares(stockId, totalShares, user)
             .then(window.location.reload())
             .catch(err => console.log(err))
 
@@ -207,7 +207,7 @@ class Portfolio extends Component {
                             </form>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant="primary" onClick={() => { this.handleBuyClose(); this.buyMoreShares(this.state.buyStockId, this.state.numStockPurchase) }}>Purchase</Button>
+                            <Button variant="primary" onClick={() => { this.handleBuyClose(); this.buyMoreShares(this.state.buyStockId, this.state.numStockPurchase, user.name) }}>Purchase</Button>
                             <Button variant="danger" onClick={this.handleBuyClose}>Cancel</Button>
                         </Modal.Footer>
                     </Modal>

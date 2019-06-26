@@ -6,6 +6,7 @@ module.exports = {
     saveStock: (req, res) => {
         db.Stock.create({
             name: req.body.name,
+            user: req.body.userId,
             numShares: req.body.numStock,
             purchasePrice: req.body.purchasePrice,
             totalWorth: req.body.totalWorth
@@ -15,7 +16,9 @@ module.exports = {
     },
 
     getPurchases: (req, res) => {
-        db.Stock.find({})
+        db.Stock.find({
+            user: req.params.user
+        })
             .then(dbStock => res.json(dbStock))
             .catch(err => res.status(422).json(err))
     },
@@ -24,7 +27,7 @@ module.exports = {
         console.log(req.body);
         db.Stock.findByIdAndUpdate(
             { _id: req.params.id },
-            { numShares: req.body.totalShares},
+            { numShares: req.body.totalShares },
             { new: true }
         )
             .then(dbStock => res.json(dbStock))
