@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { logoutUser } from "../../actions/authActions";
 import StockNavBar from '../../components/StockNavbar';
 import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table';
 import Modal from 'react-bootstrap/Modal';
@@ -146,46 +147,57 @@ class Portfolio extends Component {
         } else {
             return (
 
-                <Container>
+                <div className="container-fluid p-0">
                     <StockNavBar
                         username={user.name}
                         signout={this.onSignoutClick}
                     />
                     <Row className="mt-5 mb-5" />
                     <Row className="mt-5 mb-5" />
-                    <Row>
-                        <Table striped bordered hover responsive className="text-center">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Name</th>
-                                    <th scope="col"># of Shares</th>
-                                    <th scope="col">Price Per Share at Purchase (USD)</th>
-                                    <th scope="col">Current Price Per Share (USD)</th>
-                                    <th scope="col">Price Difference (USD)</th>
-                                    <th scope="col">Sell?</th>
-                                    <th scope="col">Buy More?</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                    {(purchaseList.length === 0) && (
+                        <Row className="mb-5 justify-content-lg-center">
+                            <Col md={{ span: 8, offset: 2 }}>
+                                <h3>You currently do not have any purchased stocks.</h3>
+                            </Col>
+                        </Row>
+                    )}
 
-                                {purchaseList.map((stock) => (
+                    <Container>
+                        <Row>
 
-                                    <tr key={stock._id}>
-                                        <td>{stock.name}</td>
-                                        <td>{stock.numShares}</td>
-                                        <td>${stock.purchasePrice}</td>
-                                        <td>${stockInfo[stockInfo.map(element => { return element.name }).indexOf(stock.name)].price}</td>
-                                        <td>${(parseFloat(stockInfo[stockInfo.map(element => { return element.name }).indexOf(stock.name)].price) - parseFloat(stock.purchasePrice).toFixed(2)).toFixed(2)}</td>
-
-                                        <td><Button as="input" id={stock.name} type="button" defaultValue="Sell" onClick={(e) => { this.handleSellOpen(); this.handleSale(e, stock._id, stockInfo[stockInfo.map(element => { return element.name }).indexOf(stock.name)].price); }} /></td>
-
-                                        <td><Button as="input" id={stock.name} type="button" defaultValue="Buy" onClick={(e) => { this.handleBuyOpen(); this.handleBuy(e, stock._id, stockInfo[stockInfo.map(element => { return element.name }).indexOf(stock.name)].price); }}></Button></td>
+                            <Table striped bordered hover responsive className="text-center">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Name</th>
+                                        <th scope="col"># of Shares</th>
+                                        <th scope="col">Price Per Share at Purchase (USD)</th>
+                                        <th scope="col">Current Price Per Share (USD)</th>
+                                        <th scope="col">Price Difference (USD)</th>
+                                        <th scope="col">Sell?</th>
+                                        <th scope="col">Buy More?</th>
                                     </tr>
-                                ))}
+                                </thead>
+                                <tbody>
 
-                            </tbody>
-                        </Table>
-                    </Row>
+                                    {purchaseList.map((stock) => (
+
+                                        <tr key={stock._id}>
+                                            <td>{stock.name}</td>
+                                            <td>{stock.numShares}</td>
+                                            <td>${stock.purchasePrice}</td>
+                                            <td>${stockInfo[stockInfo.map(element => { return element.name }).indexOf(stock.name)].price}</td>
+                                            <td>${(parseFloat(stockInfo[stockInfo.map(element => { return element.name }).indexOf(stock.name)].price) - parseFloat(stock.purchasePrice).toFixed(2)).toFixed(2)}</td>
+
+                                            <td><Button as="input" id={stock.name} type="button" defaultValue="Sell" onClick={(e) => { this.handleSellOpen(); this.handleSale(e, stock._id, stockInfo[stockInfo.map(element => { return element.name }).indexOf(stock.name)].price); }} /></td>
+
+                                            <td><Button as="input" id={stock.name} type="button" defaultValue="Buy" onClick={(e) => { this.handleBuyOpen(); this.handleBuy(e, stock._id, stockInfo[stockInfo.map(element => { return element.name }).indexOf(stock.name)].price); }}></Button></td>
+                                        </tr>
+                                    ))}
+
+                                </tbody>
+                            </Table>
+                        </Row>
+                    </Container>
 
                     <Modal show={this.state.showSellModal} onHide={this.handleSellClose}>
                         <Modal.Body>
@@ -211,7 +223,8 @@ class Portfolio extends Component {
                             <Button variant="danger" onClick={this.handleBuyClose}>Cancel</Button>
                         </Modal.Footer>
                     </Modal>
-                </Container>
+
+                </div>
             )
         }
     }
